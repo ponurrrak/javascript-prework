@@ -1,11 +1,45 @@
 function printMessage(msg){
 	let div = document.createElement('div');
 	div.innerHTML = msg;
-	document.getElementById('messages').appendChild(div);
+	let boxForText = document.getElementById('messages-text');
+	boxForText.appendChild(div);
+	if (msg === 'Niestety, przegrałeś.' || msg === 'Brawo. Wygrałeś!') {
+		boxForText.classList.add('text-to-right');
+		let boxForIcon = document.getElementById('messages-icon');
+		let iForIcon = boxForIcon.querySelector('i');
+		if (msg === 'Niestety, przegrałeś.') {
+			iForIcon.classList.add('fa-thumbs-down');
+			dataForCounter.increment('losses');
+		} else {
+			iForIcon.classList.add('fa-thumbs-up');
+			dataForCounter.increment('wins');
+		}
+		boxForIcon.classList.remove('hidden');
+	}
 }
 
 function clearMessages(){
-	document.getElementById('messages').innerHTML = '';
+	let boxForText = document.getElementById('messages-text');
+	boxForText.innerHTML = '';
+	boxForText.className = '';
+	let boxForIcon = document.getElementById('messages-icon');
+	boxForIcon.className= 'hidden';
+	boxForIcon.querySelector('i').className = 'fas';
+}
+
+function refreshCounter() {
+	let counter = document.getElementById('counter');
+	counter.querySelector('h2 span').textContent = dataForCounter.rounds;
+	let whoWins = counter.querySelector('h3');
+	if (dataForCounter.wins > dataForCounter.losses) {
+		whoWins.textContent = 'Prowadzisz';
+	} else if (dataForCounter.wins === dataForCounter.losses) {
+		whoWins.textContent = 'Remisujemy';
+	} else {
+		whoWins.textContent = 'Przegrywasz';
+	}
+	counter.querySelector('td:first-of-type').textContent = dataForCounter.wins;
+	counter.querySelector('td:last-of-type').textContent = dataForCounter.losses;
 }
 
 function getMoveName(argMoveId){
@@ -14,19 +48,12 @@ function getMoveName(argMoveId){
     return 'papier';
   } else if (moveNumber === 2) {
     return 'nożyce';
-  } else if (moveNumber === 3) {
-    return 'kamień';
   } else {
-		printMessage('Nie znam ruchu o id ' + argMoveId + '.');
-    return 'nieznany ruch';
+    return 'kamień';
   }
 }
 
 function displayResult(argComputerMove, argPlayerMove) {
-  if (argPlayerMove === 'nieznany ruch') {
-    printMessage('Podałeś wartość inną niż 1, 2 lub 3. Dlatego gra nie może zostać rozstrzygnięta. Spróbuj jeszcze raz.');
-    return;
-  }
   if (argComputerMove === argPlayerMove) {
     printMessage('Mamy remis.');
     return;
@@ -40,13 +67,13 @@ function displayResult(argComputerMove, argPlayerMove) {
 }
 
 function playGame(playerInput) {
+	dataForCounter.increment('rounds');
   clearMessages();
   let playerMove = getMoveName(playerInput);
   let randomNumber = Math.floor(Math.random() * 3 + 1);
   let computerMove = getMoveName(randomNumber);
-  if (playerMove !== 'nieznany ruch') {
-    printMessage('Twój ruch to: ' + playerMove);
-    printMessage('Mój ruch to: ' + computerMove);
-  }
+  printMessage('Twój ruch to: ' + playerMove);
+  printMessage('Mój ruch to: ' + computerMove);
   displayResult(computerMove, playerMove);
+	refreshCounter();
 }

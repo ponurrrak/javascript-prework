@@ -1,3 +1,12 @@
+let dataForCounter = {
+  rounds: 0,
+  wins: 0,
+  losses: 0,
+  increment: function(whatToIncrement) {
+    this[whatToIncrement]++;
+  }
+};
+
 document.getElementById('play-paper').addEventListener('click', function(){
   playGame(1);
 });
