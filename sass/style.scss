@@ -58,6 +58,7 @@ h1 {
   font-size: 24px;
   margin-top: 10px;
   border-collapse: collapse;
+  border-style: hidden;
 }
 
 #counter th,
@@ -104,6 +105,10 @@ button:focus {
   transform: rotate(90deg);
 }
 
+#play-stone i {
+  transform: rotateY(180deg) rotateZ(90deg);
+}
+
 
 /*Messages*/
 
@@ -130,7 +135,6 @@ button:focus {
 }
 
 #messages-icon.hidden {
-  flex: 0;
   display: none;
 }
 
